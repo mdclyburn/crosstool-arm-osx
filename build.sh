@@ -108,7 +108,7 @@ function buildCrosstool()
 	--with-automake=$BrewHome/bin/automake       \
 	--with-bash=$BrewHome/bin/bash               \
 	CFLAGS="-std=c99 -Doffsetof=__builtin_offsetof"
-    make
+    make -j16
 }
 
 function createToolchain()
@@ -131,9 +131,12 @@ function createToolchain()
     cp $InstallBase/${ToolChainName}.config ./.config
 
     echo "Manually Configuring toolchain"
-    echo "        Select 'Force unwind support'"
-    echo "        Unselect 'Link libstdc++ statically onto the gcc binary'"
-    echo "        Unselect 'Debugging -> dmalloc or fix its build'"
+    echo "      - Select 'Force unwind support'"
+    echo "      - Unselect 'Link libstdc++ statically onto the gcc binary'"
+    echo "      - Unselect 'Debugging -> dmalloc or fix its build'"
+    # Pause and let the user see the message before going to the menuconfig.
+    echo "Press any key to continue to menuconfig."
+    read -p "$*"
 
     # Use 'menuconfig' target for the fine tuning.
     PATH=$BrewHome/bin:$PATH ../${CrossToolVersion}/ct-ng menuconfig
